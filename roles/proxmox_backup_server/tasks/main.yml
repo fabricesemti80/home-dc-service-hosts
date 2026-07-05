@@ -42,3 +42,60 @@
     msg:
       - "Open https://{{ ansible_host | default(inventory_hostname) }}:8007/ and sign in with the root account."
       - "Fingerprint: {{ pbs_cert_info.stdout | regex_search('(?:[0-9a-f]{2}:){31}[0-9a-f]{2}') }}"
+
+- name: Check PBS prune jobs
+  ansible.builtin.command: proxmox-backup-manager prune-job show {{ item.id }} --output-format json
+  register: pbs_prune_job_status
+  changed_when: false
+  failed_when: false
+  run_once: true
+  loop: "{{ pbs_prune_jobs | default([]) }}"
+  loop_control:
+    label: "{{ item.id }}"
+
+- name: Configure PBS prune jobs
+  ansible.builtin.command: >-
+    proxmox-backup-manager {{ 'prune-job update' if item.rc == 0 else 'prune-job create' }}
+    {{ item.item.id }}
+    --schedule {{ item.item.schedule | quote }}
+    --store {{ item.item.store | quote }}
+    --comment {{ item.item.comment | quote }}
+    --keep-daily {{ item.item.keep_daily }}
+    --keep-weekly {{ item.item.keep_weekly }}
+    --keep-monthly {{ item.item.keep_monthly }}
+    --keep-yearly {{ item.item.keep_yearly }}
+  changed_when: item.rc != 0
+  run_once: true
+  loop: "{{ pbs_prune_job_status.results | default([]) }}"
+  loop_control:
+    label: "{{ item.item.id }}"
+  when: pbs_prune_jobs | default([]) | length > 0
+
+- name: Check PBS verify jobs
+  ansible.builtin.command: proxmox-backup-manager verify-job show {{ item.id }} --output-format json
+  register: pbs_verify_job_status
+  changed_when: false
+  failed_when: false
+  run_once: true
+  loop: "{{ pbs_verify_jobs | default([]) }}"
+  loop_control:
+    label: "{{ item.id }}"
+
+- name: Configure PBS verify jobs
+  ansible.builtin.command: >-
+    proxmox-backup-manager {{ 'verify-job update' if item.rc == 0 else 'verify-job create' }}
+    {{ item.item.id }}
+    --store {{ item.item.store | quote }}
+    --schedule {{ item.item.schedule | quote }}
+    --comment {{ item.item.comment | quote }}
+    --outdated-after {{ item.item.outdated_after }}
+    --ignore-verified {{ item.item.ignore_verified | int }}
+    --max-depth {{ item.item.max_depth }}
+    --read-threads {{ item.item.read_threads }}
+    --verify-threads {{ item.item.verify_threads }}
+  changed_when: item.rc != 0
+  run_once: true
+  loop: "{{ pbs_verify_job_status.results | default([]) }}"
+  loop_control:
+    label: "{{ item.item.id }}"
+  when: pbs_verify_jobs | default([]) | length > 0

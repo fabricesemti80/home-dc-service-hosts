@@ -1,0 +1,23 @@
+---
+pbs_datastore_name: proxmox-pbs-datastore
+
+pbs_prune_jobs:
+  - id: pbs-datastore-prune
+    store: "{{ pbs_datastore_name }}"
+    schedule: "12:30"
+    comment: "Managed by Ansible."
+    keep_daily: 7
+    keep_weekly: 4
+    keep_monthly: 6
+    keep_yearly: 1
+
+pbs_verify_jobs:
+  - id: pbs-datastore-verify
+    store: "{{ pbs_datastore_name }}"
+    schedule: "sun 21:00"
+    comment: "Managed by Ansible."
+    outdated_after: 30
+    ignore_verified: true
+    max_depth: 7
+    read_threads: 1
+    verify_threads: 4
