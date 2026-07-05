@@ -32,6 +32,13 @@
     state: started
     enabled: true
 
+- name: Read Proxmox Backup Server certificate fingerprint
+  ansible.builtin.command: proxmox-backup-manager cert info
+  register: pbs_cert_info
+  changed_when: false
+
 - name: Show Proxmox Backup Server connection details
   ansible.builtin.debug:
-    msg: "Open https://{{ ansible_host | default(inventory_hostname) }}:8007/ and sign in with the root account."
+    msg:
+      - "Open https://{{ ansible_host | default(inventory_hostname) }}:8007/ and sign in with the root account."
+      - "Fingerprint: {{ pbs_cert_info.stdout | regex_search('(?:[0-9a-f]{2}:){31}[0-9a-f]{2}') }}"
