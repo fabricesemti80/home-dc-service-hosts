@@ -47,9 +47,8 @@ resource "proxmox_virtual_environment_container" "proxmox_pbs_0" {
   }
 
   network_interface {
-    name    = "veth0"
-    bridge  = "vmbr0"
-    vlan_id = 40
+    name   = "veth0"
+    bridge = "vmbr0"
   }
 
   operating_system {

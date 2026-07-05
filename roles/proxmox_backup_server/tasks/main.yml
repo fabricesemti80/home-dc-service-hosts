@@ -12,6 +12,11 @@
     content: |
       deb http://download.proxmox.com/debian/pbs trixie pbs-no-subscription
 
+- name: Disable Proxmox Backup Server enterprise repository
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/pbs-enterprise.sources
+    state: absent
+
 - name: Install Proxmox Backup Server
   ansible.builtin.apt:
     name: proxmox-backup-server
