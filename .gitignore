@@ -1,9 +1,10 @@
-.terraform/
-.ansible/
-modules/*/.terraform.lock.hcl
+terraform/.terraform/
+terraform/modules/*/.terraform/
+ansible/.ansible/
+terraform/modules/*/.terraform.lock.hcl
 .env
-*.tfstate
-*.tfstate.*
-tfplan*
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/tfplan*
 *.auto.tfvars
 !guests.auto.tfvars.example

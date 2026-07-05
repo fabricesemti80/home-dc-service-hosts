@@ -35,6 +35,8 @@ task tf:apply
 task ansible:apply
 ```
 
+Terraform lives in `terraform/` and Ansible lives in `ansible/`.
+
 Create `.env` from `.env.example`. For now this repo uses Proxmox ticket auth
 because privileged LXC feature flags are rejected through API tokens.
 
