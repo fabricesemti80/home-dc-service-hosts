@@ -9,14 +9,15 @@ variable "proxmox_insecure" {
   default     = true
 }
 
-variable "proxmox_token_id" {
+variable "proxmox_username" {
   type        = string
-  description = "Proxmox API token ID, for example terraform@pve!terraform."
+  description = "Proxmox username for ticket auth."
+  default     = "root@pam"
 }
 
-variable "proxmox_token_secret" {
+variable "proxmox_password" {
   type        = string
-  description = "Proxmox API token secret."
+  description = "Proxmox password for ticket auth."
   sensitive   = true
 }
 

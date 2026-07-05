@@ -54,7 +54,7 @@ resource "proxmox_virtual_environment_container" "this" {
   }
 
   network_interface {
-    name    = "veth0"
+    name    = "eth0"
     bridge  = var.bridge
     vlan_id = var.vlan_id
   }
@@ -68,5 +68,17 @@ resource "proxmox_virtual_environment_container" "this" {
     order      = var.startup_order
     up_delay   = var.startup_up_delay
     down_delay = var.startup_down_delay
+  }
+
+  lifecycle {
+    ignore_changes = [
+      description,
+      tags,
+      started,
+      initialization,
+      network_interface,
+      mount_point,
+      operating_system,
+    ]
   }
 }

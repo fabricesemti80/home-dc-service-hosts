@@ -9,8 +9,8 @@ vars:
     -w /work
     -e TF_VAR_proxmox_endpoint
     -e TF_VAR_proxmox_insecure
-    -e TF_VAR_proxmox_token_id
-    -e TF_VAR_proxmox_token_secret
+    -e TF_VAR_proxmox_username
+    -e TF_VAR_proxmox_password
     -e TF_VAR_root_ssh_public_keys
     {{.TERRAFORM_IMAGE}}
 

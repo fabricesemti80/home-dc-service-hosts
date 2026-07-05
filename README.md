@@ -35,9 +35,8 @@ task tf:apply
 task ansible:apply
 ```
 
-Create `.env` from `.env.example`. For now this repo reads local
-`TF_VAR_proxmox_*` exports from `.env`; move those values into Doppler once this
-guest repo has its own project/config.
+Create `.env` from `.env.example`. For now this repo uses Proxmox ticket auth
+because privileged LXC feature flags are rejected through API tokens.
 
 ## Ansible
 
