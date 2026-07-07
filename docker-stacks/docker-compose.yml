@@ -1,0 +1,11 @@
+name: homelab
+
+include:
+  - core/docker-compose.yml
+  - monitoring/docker-compose.yml
+  - networking/docker-compose.yml
+  - docker-apps/docker-compose.yml
+
+networks:
+  homelab_proxy:
+    external: true
