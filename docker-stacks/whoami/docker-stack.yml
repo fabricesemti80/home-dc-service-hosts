@@ -1,0 +1,14 @@
+name: whoami
+
+services:
+  whoami:
+    image: traefik/whoami:latest
+    container_name: whoami
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:80"
+    labels:
+      docktail.service.enable: "true"
+      docktail.service.name: whoami
+      docktail.service.port: "8080"
+      docktail.service.protocol: http
