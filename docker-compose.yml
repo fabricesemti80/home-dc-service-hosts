@@ -1,0 +1,2 @@
+include:
+  - docker-stacks/docker-compose.yml
