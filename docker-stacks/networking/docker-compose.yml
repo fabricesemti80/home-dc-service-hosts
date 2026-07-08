@@ -1,0 +1,55 @@
+name: homelab-networking
+
+services:
+  docktail:
+    image: ghcr.io/marvinvr/docktail:latest
+    container_name: docktail
+    restart: unless-stopped
+    networks:
+      - homelab_proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run/tailscale:/var/run/tailscale
+    environment:
+      TAILSCALE_OAUTH_CLIENT_ID: ${TAILSCALE_OAUTH_CLIENT_ID}
+      TAILSCALE_OAUTH_CLIENT_SECRET: ${TAILSCALE_OAUTH_CLIENT_SECRET}
+
+  technitium:
+    image: docker.io/technitium/dns-server:latest
+    container_name: technitium
+    hostname: dns-server-1
+    restart: unless-stopped
+    networks:
+      - homelab_proxy
+    ports:
+      - target: 53
+        published: 53
+        protocol: tcp
+        mode: host
+      - target: 53
+        published: 53
+        protocol: udp
+        mode: host
+    environment:
+      DNS_SERVER_DOMAIN: dns-server-1
+      DNS_SERVER_ADMIN_PASSWORD: ${TECHNITIUM_ADMIN_PASSWORD}
+      DNS_SERVER_WEB_SERVICE_LOCAL_ADDRESSES: 0.0.0.0
+      DNS_SERVER_WEB_SERVICE_HTTP_PORT: "5380"
+      DNS_SERVER_WEB_SERVICE_ENABLE_HTTPS: "false"
+    volumes:
+      - technitium_data:/etc/dns
+    labels:
+      docktail.service.enable: "true"
+      docktail.service.name: technitium-1
+      docktail.service.port: "5380"
+      docktail.service.service-port: "443"
+      docktail.service.protocol: http
+
+networks:
+  homelab_proxy:
+    name: homelab_proxy
+    external: true
+
+volumes:
+  technitium_data:
+    name: docker_apps_technitium_data
