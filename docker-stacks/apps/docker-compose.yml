@@ -19,11 +19,6 @@ services:
       docktail.service.service-port: "443"
       docktail.service.protocol: http
 
-networks:
-  homelab_proxy:
-    name: homelab_proxy
-    external: true
-
 volumes:
   vaultwarden_data:
     name: docker_apps_vaultwarden_data
