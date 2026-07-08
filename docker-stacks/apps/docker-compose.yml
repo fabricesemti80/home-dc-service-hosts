@@ -18,6 +18,10 @@ services:
       docktail.service.port: "80"
       docktail.service.service-port: "443"
       docktail.service.protocol: http
+      homepage.group: Apps
+      homepage.name: Vaultwarden
+      homepage.icon: bitwarden
+      homepage.href: https://vaultwarden.koala-dominant.ts.net
 
   beszel:
     image: henrygd/beszel:latest
@@ -36,6 +40,10 @@ services:
       docktail.service.port: "8090"
       docktail.service.service-port: "443"
       docktail.service.protocol: http
+      homepage.group: Monitoring
+      homepage.name: Beszel
+      homepage.icon: mdi-chart-line
+      homepage.href: https://beszel.koala-dominant.ts.net
 
   beszel-agent:
     image: henrygd/beszel-agent:latest

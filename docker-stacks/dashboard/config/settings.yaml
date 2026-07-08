@@ -1,0 +1,8 @@
+title: Homelab Dashboard
+favicon: https://tailscale.com/favicon.ico
+background:
+  image: https://images.unsplash.com/photo-1506744038136-46273834b3fb
+  blur: sm
+  opacity: 20
+color: slate
+theme: dark

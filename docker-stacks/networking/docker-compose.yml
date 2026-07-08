@@ -48,6 +48,10 @@ services:
       docktail.service.port: "5380"
       docktail.service.service-port: "443"
       docktail.service.protocol: http
+      homepage.group: Infrastructure
+      homepage.name: Technitium Secondary
+      homepage.icon: mdi-dns
+      homepage.href: https://technitium-1.koala-dominant.ts.net
 
 networks:
   homelab_proxy:

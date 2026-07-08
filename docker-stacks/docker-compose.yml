@@ -28,6 +28,10 @@ services:
       docktail.service.port: "80"
       docktail.service.service-port: "443"
       docktail.service.protocol: http
+      homepage.group: Infrastructure
+      homepage.name: Whoami
+      homepage.icon: mdi-question-mark
+      homepage.href: https://whoami.koala-dominant.ts.net
 
   uptime-kuma:
     image: louislam/uptime-kuma:latest
@@ -45,6 +49,10 @@ services:
       docktail.service.port: "3001"
       docktail.service.service-port: "443"
       docktail.service.protocol: http
+      homepage.group: Monitoring
+      homepage.name: Uptime Kuma
+      homepage.icon: uptime-kuma
+      homepage.href: https://uptime-kuma.koala-dominant.ts.net
 
   technitium:
     image: docker.io/technitium/dns-server:latest
@@ -80,6 +88,10 @@ services:
       docktail.service.port: "5380"
       docktail.service.service-port: "443"
       docktail.service.protocol: http
+      homepage.group: Infrastructure
+      homepage.name: Technitium Primary
+      homepage.icon: mdi-dns
+      homepage.href: https://technitium-0.koala-dominant.ts.net
 
 networks:
   homelab_proxy:

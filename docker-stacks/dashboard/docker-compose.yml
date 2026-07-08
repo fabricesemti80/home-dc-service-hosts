@@ -1,0 +1,27 @@
+name: homelab-dashboard
+
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    restart: unless-stopped
+    networks:
+      - homelab_proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./config:/app/config
+    labels:
+      docktail.service.enable: "true"
+      docktail.service.name: homepage
+      docktail.service.port: "3000"
+      docktail.service.service-port: "443"
+      docktail.service.protocol: http
+      homepage.group: Dashboard
+      homepage.name: Homepage
+      homepage.icon: homepage
+      homepage.href: https://homepage.koala-dominant.ts.net
+
+networks:
+  homelab_proxy:
+    name: homelab_proxy
+    external: true
