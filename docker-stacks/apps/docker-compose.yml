@@ -1,0 +1,29 @@
+name: homelab
+
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    networks:
+      - homelab_proxy
+    environment:
+      DOMAIN: ${VAULTWARDEN_APP_URL:-https://vaultwarden.koala-dominant.ts.net}
+      ADMIN_TOKEN: ${VAULTWARDEN_ADMIN_TOKEN}
+    volumes:
+      - vaultwarden_data:/data
+    labels:
+      docktail.service.enable: "true"
+      docktail.service.name: vaultwarden
+      docktail.service.port: "80"
+      docktail.service.service-port: "443"
+      docktail.service.protocol: http
+
+networks:
+  homelab_proxy:
+    name: homelab_proxy
+    external: true
+
+volumes:
+  vaultwarden_data:
+    name: docker_apps_vaultwarden_data

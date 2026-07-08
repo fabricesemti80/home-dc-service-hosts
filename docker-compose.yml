@@ -1,2 +1,3 @@
 include:
   - docker-stacks/docker-compose.yml
+  - docker-stacks/apps/docker-compose.yml
