@@ -33,7 +33,6 @@ services:
       APP_URL: ${BESZEL_APP_URL:-https://beszel.koala-dominant.ts.net}
     volumes:
       - beszel_data:/beszel_data
-      - beszel_socket:/beszel_socket
     labels:
       docktail.service.enable: "true"
       docktail.service.name: beszel
@@ -51,12 +50,11 @@ services:
     restart: unless-stopped
     network_mode: host
     environment:
-      LISTEN: /beszel_socket/beszel.sock
+      LISTEN: "45876"
       KEY: ${BESZEL_AGENT_KEY}
     volumes:
       - beszel_agent_data:/var/lib/beszel-agent
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - beszel_socket:/beszel_socket
 
 volumes:
   vaultwarden_data:
@@ -65,8 +63,6 @@ volumes:
     name: docker_apps_beszel_data
   beszel_agent_data:
     name: docker_apps_beszel_agent_data
-  beszel_socket:
-    name: docker_apps_beszel_socket
 
 networks:
   homelab_proxy:

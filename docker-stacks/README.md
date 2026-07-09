@@ -11,13 +11,15 @@ in the repo root `.env` and are listed in `.env.example`.
 |---|---|---|
 | `docker-compose.yml` | Docktail, Whoami, Uptime Kuma, Technitium | Docker hosts |
 | `apps/docker-compose.yml` | Vaultwarden, Beszel, Beszel agent | `docker-svc-0` |
+| `beszel-agent/docker-compose.yml` | Beszel agent only | extra Docker hosts |
 | `dashboard/docker-compose.yml` | Homepage | `docker-svc-0` |
 | `networking/docker-compose.yml` | Docktail, Technitium | networking hosts |
 
 All services attach to the `homelab_proxy` bridge network (Ansible ensures it exists before the stack deploys).
 
 Beszel agent requires `BESZEL_AGENT_KEY`; without it the container exits with
-`no key provided`.
+`no key provided`. Docker agents listen on TCP `45876`, matching the host/port
+configured in Beszel.
 
 ## HTTPS
 
