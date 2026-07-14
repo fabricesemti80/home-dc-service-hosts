@@ -27,6 +27,10 @@ services:
       docktail.service.port: "9000"
       docktail.service.service-port: "443"
       docktail.service.protocol: http
+      homepage.group: Infrastructure
+      homepage.name: Portainer
+      homepage.icon: portainer
+      homepage.href: https://{{ portainer_hostname }}
 {% endif %}
 
 {% if portainer_is_agent | bool %}
