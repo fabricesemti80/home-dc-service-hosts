@@ -151,13 +151,16 @@ services:
     image: ghcr.io/gethomepage/homepage:latest
     container_name: homepage
     restart: unless-stopped
+    depends_on:
+      homepage-config:
+        condition: service_completed_successfully
     environment:
       HOMEPAGE_ALLOWED_HOSTS: start.koala-dominant.ts.net
     networks:
       - homelab_proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./docker-stacks/dashboard/config:/app/config
+      - homepage_config:/app/config
     labels:
       docktail.service.enable: "true"
       docktail.service.name: start
@@ -169,6 +172,55 @@ services:
       homepage.icon: homepage
       homepage.href: https://start.koala-dominant.ts.net
 
+  homepage-config:
+    image: alpine:latest
+    container_name: homepage-config
+    restart: "no"
+    volumes:
+      - homepage_config:/config
+    command:
+      - sh
+      - -c
+      - |
+        cat > /config/settings.yaml <<'EOF'
+        title: Homelab Dashboard
+        favicon: https://tailscale.com/favicon.ico
+        color: slate
+        theme: dark
+        EOF
+        cat > /config/docker.yaml <<'EOF'
+        my-docker:
+          socket: /var/run/docker.sock
+        EOF
+        cat > /config/bookmarks.yaml <<'EOF'
+        ---
+        EOF
+        cat > /config/services.yaml <<'EOF'
+        ---
+        - Homelab:
+            - Portainer:
+                icon: portainer
+                href: https://portainer.koala-dominant.ts.net
+            - Uptime Kuma:
+                icon: uptime-kuma
+                href: https://uptime-kuma.koala-dominant.ts.net
+            - Vaultwarden:
+                icon: vaultwarden
+                href: https://vaultwarden.koala-dominant.ts.net
+            - Beszel:
+                icon: beszel
+                href: https://beszel.koala-dominant.ts.net
+            - Technitium:
+                icon: technitium
+                href: https://technitium-0.koala-dominant.ts.net
+            - Pulse:
+                icon: mdi-pulse
+                href: https://pulse.koala-dominant.ts.net
+            - Whoami:
+                icon: mdi-test-tube
+                href: https://whoami.koala-dominant.ts.net
+        EOF
+
   pulse:
     image: rcourtman/pulse:latest
     container_name: pulse
@@ -179,12 +231,11 @@ services:
       TZ: Europe/London
       NODE_NAME: ${HOSTNAME:-pulse-server}
     networks:
-      - monitoring-net
       - homelab_proxy
     labels:
       docktail.service.enable: "true"
       docktail.service.name: pulse
-      docktail.service.port: "8080"
+      docktail.service.port: "7655"
       docktail.service.service-port: "443"
       docktail.service.protocol: http
       homepage.group: Monitoring
@@ -196,10 +247,10 @@ networks:
   homelab_proxy:
     name: homelab_proxy
     external: true
-  monitoring-net:
-    driver: bridge
 
 volumes:
+  homepage_config:
+    name: homelab_homepage_config
   docker_apps_uptime_kuma_data:
     name: docker_apps_uptime_kuma_data
     external: true
