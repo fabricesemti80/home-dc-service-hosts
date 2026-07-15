@@ -1,6 +1,6 @@
 ---
 - name: Configure Debian service hosts
-  hosts: proxmox_debian_guests
+  hosts: debian_service_hosts
   become: true
   roles:
     - debian_base
@@ -20,3 +20,9 @@
     - tailscale_host
     - portainer_bootstrap
     - disable_systemd_resolved
+
+- name: Configure Docker swarm
+  hosts: docker_swarm
+  become: true
+  roles:
+    - docker_swarm

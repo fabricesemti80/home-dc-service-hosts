@@ -1,0 +1,67 @@
+---
+- name: Validate swarm inventory
+  ansible.builtin.assert:
+    that:
+      - groups['docker_swarm_managers'] | length == 1
+      - groups['docker_swarm_workers'] | length >= 1
+    fail_msg: "Use exactly one swarm manager and at least one worker."
+
+- name: Set swarm manager host
+  ansible.builtin.set_fact:
+    docker_swarm_manager_host: "{{ groups['docker_swarm_managers'][0] }}"
+
+- name: Check local swarm state
+  ansible.builtin.command: docker info --format '{{ "{{.Swarm.LocalNodeState}}" }} {{ "{{.Swarm.ControlAvailable}}" }}'
+  register: docker_swarm_state
+  changed_when: false
+
+- name: Initialize swarm on manager
+  ansible.builtin.command: >-
+    docker swarm init
+    --advertise-addr {{ docker_swarm_advertise_addr | default(ansible_host) }}
+    --listen-addr {{ docker_swarm_listen_addr }}
+  when:
+    - inventory_hostname == docker_swarm_manager_host
+    - docker_swarm_state.stdout.split()[0] == "inactive"
+
+- name: Read worker join token
+  ansible.builtin.command: docker swarm join-token -q worker
+  register: docker_swarm_worker_token
+  changed_when: false
+  run_once: true
+  delegate_to: "{{ docker_swarm_manager_host }}"
+
+- name: Join workers to swarm
+  ansible.builtin.command: >-
+    docker swarm join
+    --token {{ docker_swarm_worker_token.stdout }}
+    {{ hostvars[docker_swarm_manager_host].docker_swarm_advertise_addr | default(hostvars[docker_swarm_manager_host].ansible_host) }}:{{ docker_swarm_port }}
+  when:
+    - inventory_hostname in groups['docker_swarm_workers']
+    - docker_swarm_state.stdout.split()[0] == "inactive"
+
+- name: Check swarm overlay network
+  ansible.builtin.command: "docker network inspect {{ docker_swarm_overlay_network }}"
+  register: docker_swarm_overlay_network_check
+  changed_when: false
+  failed_when: docker_swarm_overlay_network_check.rc not in [0, 1]
+  run_once: true
+  delegate_to: "{{ docker_swarm_manager_host }}"
+
+- name: Create swarm overlay network
+  ansible.builtin.command: "docker network create --driver overlay --attachable {{ docker_swarm_overlay_network }}"
+  when: docker_swarm_overlay_network_check.rc == 1
+  run_once: true
+  delegate_to: "{{ docker_swarm_manager_host }}"
+
+- name: Show swarm nodes
+  ansible.builtin.command: docker node ls
+  register: docker_swarm_nodes
+  changed_when: false
+  run_once: true
+  delegate_to: "{{ docker_swarm_manager_host }}"
+
+- name: Print swarm nodes
+  ansible.builtin.debug:
+    var: docker_swarm_nodes.stdout_lines
+  run_once: true

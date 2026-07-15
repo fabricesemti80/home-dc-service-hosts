@@ -1,0 +1,4 @@
+---
+docker_swarm_listen_addr: "0.0.0.0:2377"
+docker_swarm_port: 2377
+docker_swarm_overlay_network: homelab_proxy_swarm

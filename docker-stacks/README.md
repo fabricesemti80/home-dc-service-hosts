@@ -1,6 +1,6 @@
 # Docker stacks
 
-Portainer-managed Docker Compose stacks for standalone Docker hosts.
+Portainer-managed Docker stacks.
 
 ## Layout
 
@@ -9,13 +9,12 @@ in the repo root `.env` and are listed in `.env.example`.
 
 | Area | Services | Endpoint |
 |---|---|---|
-| `docker-compose.yml` | Docktail, Whoami, Uptime Kuma, Technitium | Docker hosts |
-| `apps/docker-compose.yml` | Vaultwarden, Beszel, Beszel agent | `docker-svc-0` |
-| `beszel-agent/docker-compose.yml` | Beszel agent only | extra Docker hosts |
-| `dashboard/docker-compose.yml` | Homepage | `docker-svc-0` |
-| `networking/docker-compose.yml` | Docktail, Technitium | networking hosts |
+| `apps/docker-compose.yml` | Vaultwarden, Beszel, Uptime Kuma, Whoami, Beszel agent | Swarm; apps pinned to `docker-svc-1`, agent global |
+| `dashboard/docker-compose.yml` | Homepage | Swarm; pinned to `docker-svc-1` |
+| `networking/docker-compose.yml` | Docktail, Technitium primary/secondary | Swarm; Docktail global, DNS pinned per host |
+| `monitoring/docker-compose.yml` | Pulse | Swarm manager, constrained to `docker-svc-1` |
 
-All services attach to the `homelab_proxy` bridge network (Ansible ensures it exists before the stack deploys).
+Services attach to `homelab_proxy`; Swarm stacks require that network to be a swarm-scope overlay network before deployment.
 
 Beszel agent requires `BESZEL_AGENT_KEY`; without it the container exits with
 `no key provided`. Docker agents listen on TCP `45876`, matching the host/port
@@ -37,4 +36,4 @@ labels:
 ## Deployment
 
 Portainer GitOps pulls these compose files from this repo. Ansible only
-bootstraps Docker, Tailscale, and Portainer.
+bootstraps Docker, Tailscale, Swarm, and Portainer.
