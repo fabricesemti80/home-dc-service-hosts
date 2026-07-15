@@ -52,6 +52,7 @@ services:
         condition: any
     labels:
       docktail.service.enable: "true"
+      docktail.service.direct: "false"
       docktail.service.name: technitium-0
       docktail.service.port: "5380"
       docktail.service.service-port: "443"
@@ -99,6 +100,7 @@ services:
         condition: any
     labels:
       docktail.service.enable: "true"
+      docktail.service.direct: "false"
       docktail.service.name: technitium-1
       docktail.service.port: "5380"
       docktail.service.service-port: "443"

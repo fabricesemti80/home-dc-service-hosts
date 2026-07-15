@@ -8,6 +8,11 @@ services:
       ADMIN_TOKEN: ${VAULTWARDEN_ADMIN_TOKEN}
     volumes:
       - vaultwarden_data:/data
+    ports:
+      - target: 80
+        published: 18080
+        protocol: tcp
+        mode: host
     deploy:
       placement:
         constraints:
@@ -16,6 +21,7 @@ services:
         condition: any
     labels:
       docktail.service.enable: "true"
+      docktail.service.direct: "false"
       docktail.service.name: vaultwarden
       docktail.service.port: "80"
       docktail.service.service-port: "443"
@@ -33,6 +39,11 @@ services:
       APP_URL: ${BESZEL_APP_URL:-https://beszel.koala-dominant.ts.net}
     volumes:
       - beszel_data:/beszel_data
+    ports:
+      - target: 8090
+        published: 18090
+        protocol: tcp
+        mode: host
     deploy:
       placement:
         constraints:
@@ -41,6 +52,7 @@ services:
         condition: any
     labels:
       docktail.service.enable: "true"
+      docktail.service.direct: "false"
       docktail.service.name: beszel
       docktail.service.port: "8090"
       docktail.service.service-port: "443"
@@ -74,6 +86,11 @@ services:
       - homelab_proxy_swarm
     volumes:
       - uptime_kuma_data:/app/data
+    ports:
+      - target: 3001
+        published: 13001
+        protocol: tcp
+        mode: host
     deploy:
       placement:
         constraints:
@@ -82,6 +99,7 @@ services:
         condition: any
     labels:
       docktail.service.enable: "true"
+      docktail.service.direct: "false"
       docktail.service.name: uptime-kuma
       docktail.service.port: "3001"
       docktail.service.service-port: "443"
@@ -95,6 +113,11 @@ services:
     image: traefik/whoami:latest
     networks:
       - homelab_proxy_swarm
+    ports:
+      - target: 80
+        published: 18081
+        protocol: tcp
+        mode: host
     deploy:
       placement:
         constraints:
@@ -103,6 +126,7 @@ services:
         condition: any
     labels:
       docktail.service.enable: "true"
+      docktail.service.direct: "false"
       docktail.service.name: whoami
       docktail.service.port: "80"
       docktail.service.service-port: "443"
