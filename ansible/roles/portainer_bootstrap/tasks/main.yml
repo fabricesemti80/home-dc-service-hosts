@@ -5,6 +5,7 @@
       - portainer_admin_password | length > 0
     fail_msg: "PORTAINER_ADMIN_PASSWORD is required for portainer_bootstrap role."
   no_log: true
+  when: inventory_hostname in groups['portainer_server_hosts']
 
 - name: Set Portainer node facts
   ansible.builtin.set_fact:
@@ -34,6 +35,7 @@
     src: docker-compose.yml.j2
     dest: "{{ portainer_root }}/docker-compose.yml"
     mode: "0644"
+  when: portainer_is_server | bool
 
 - name: Ensure homelab_proxy Docker network exists
   ansible.builtin.command:
@@ -41,13 +43,53 @@
   register: homelab_proxy_network_check
   changed_when: false
   failed_when: homelab_proxy_network_check.rc not in [0, 1]
+  when: portainer_is_server | bool
 
 - name: Create homelab_proxy Docker network
   ansible.builtin.command:
     cmd: docker network create homelab_proxy
-  when: homelab_proxy_network_check.rc == 1
+  when:
+    - portainer_is_server | bool
+    - homelab_proxy_network_check.rc == 1
 
 - name: Deploy Portainer
   ansible.builtin.command:
     cmd: docker compose up -d --remove-orphans
     chdir: "{{ portainer_root }}"
+  when: portainer_is_server | bool
+
+- name: Check standalone Portainer agent container
+  ansible.builtin.command: docker container inspect portainer-agent
+  register: portainer_standalone_agent_check
+  changed_when: false
+  failed_when: portainer_standalone_agent_check.rc not in [0, 1]
+  when: portainer_is_agent | bool
+
+- name: Remove standalone Portainer agent container
+  ansible.builtin.command: docker rm -f portainer-agent
+  when:
+    - portainer_is_agent | bool
+    - portainer_standalone_agent_check.rc == 0
+
+- name: Check Portainer agent swarm service
+  ansible.builtin.command: "docker service inspect {{ portainer_agent_service_name }}"
+  register: portainer_agent_service_check
+  changed_when: false
+  failed_when: portainer_agent_service_check.rc not in [0, 1]
+  run_once: true
+  delegate_to: "{{ groups['docker_swarm_managers'][0] }}"
+
+- name: Deploy Portainer agent swarm service
+  ansible.builtin.command: >-
+    docker service create
+    --name {{ portainer_agent_service_name }}
+    --network {{ portainer_agent_network }}
+    --publish published={{ portainer_agent_port }},target=9001,protocol=tcp,mode=host
+    --mode global
+    --constraint node.platform.os==linux
+    --mount type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock
+    --mount type=bind,src=/var/lib/docker/volumes,dst=/var/lib/docker/volumes
+    portainer/agent:{{ portainer_tag }}
+  when: portainer_agent_service_check.rc == 1
+  run_once: true
+  delegate_to: "{{ groups['docker_swarm_managers'][0] }}"

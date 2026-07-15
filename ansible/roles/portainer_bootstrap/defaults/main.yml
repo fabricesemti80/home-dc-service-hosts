@@ -8,6 +8,8 @@ portainer_http_port: 9000
 portainer_https_port: 9443
 portainer_edge_port: 8000
 portainer_agent_port: 9001
+portainer_agent_service_name: portainer_agent
+portainer_agent_network: homelab_proxy_swarm
 
 portainer_root: /opt/portainer
 portainer_data_dir: "{{ portainer_root }}/data"

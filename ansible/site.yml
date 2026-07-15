@@ -18,7 +18,6 @@
   roles:
     - geerlingguy.docker
     - tailscale_host
-    - portainer_bootstrap
     - disable_systemd_resolved
 
 - name: Configure Docker swarm
@@ -26,3 +25,9 @@
   become: true
   roles:
     - docker_swarm
+
+- name: Bootstrap Portainer
+  hosts: docker_standalone_hosts
+  become: true
+  roles:
+    - portainer_bootstrap

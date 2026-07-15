@@ -20,6 +20,9 @@ Beszel agent requires `BESZEL_AGENT_KEY`; without it the container exits with
 `no key provided`. Docker agents listen on TCP `45876`, matching the host/port
 configured in Beszel.
 
+Pulse setup notes live next to the stack in
+[`monitoring/README.md`](monitoring/README.md).
+
 ## HTTPS
 
 App labels expose services via Docktail as native Tailscale Services on port 443 with automatic Tailscale HTTPS certificates, e.g.:

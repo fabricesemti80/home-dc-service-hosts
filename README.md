@@ -42,6 +42,9 @@ Terraform lives in `terraform/` and Ansible lives in `ansible/`.
 Create `.env` from `.env.example`. For now this repo uses Proxmox ticket auth
 because privileged LXC feature flags are rejected through API tokens.
 
+Guest notes, including the PBS API-token fix for high CPU from root PAM polling,
+live in [`terraform/README.md`](terraform/README.md).
+
 ## Ansible
 
 `proxmox_debian_guests` receives the `debian_base` role. Service-specific
@@ -49,6 +52,9 @@ groups, such as `proxmox_backup_servers`, add narrow roles on top.
 
 `docker_standalone_hosts` receives Docker, host-level Tailscale, and Portainer
 bootstrap. Portainer manages application stacks from `docker-stacks/`.
+
+Pulse configuration notes live in
+[`docker-stacks/monitoring/README.md`](docker-stacks/monitoring/README.md).
 
 ## Guest Modules
 
