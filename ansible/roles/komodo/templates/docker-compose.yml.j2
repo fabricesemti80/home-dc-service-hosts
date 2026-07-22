@@ -22,6 +22,9 @@ services:
       - mongo
     ports:
       - "{{ komodo_port }}:9120"
+    networks:
+      - default
+      - homelab_proxy_swarm
     env_file: ./compose.env
     environment:
       KOMODO_DATABASE_ADDRESS: mongo:27017
@@ -55,3 +58,7 @@ services:
 
 volumes:
   keys:
+
+networks:
+  homelab_proxy_swarm:
+    external: true
