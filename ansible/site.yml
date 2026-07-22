@@ -12,13 +12,47 @@
 #     - proxmox_backup_server
 #     - proxmox_backup_datastore
 
-# - name: Configure Docker standalone hosts
-#   hosts: docker_standalone_hosts
-#   become: true
-#   roles:
-#     - geerlingguy.docker
-#     - tailscale_host
-#     - disable_systemd_resolved
+- name: Configure Docker standalone hosts
+  hosts: docker_standalone_hosts
+  become: true
+  pre_tasks:
+    - name: Remove ignored Docker bookworm deb822 source on Debian 13
+      ansible.builtin.file:
+        path: /etc/apt/sources.list.d/docker-bookworm.sources
+        state: absent
+      when:
+        - ansible_facts.os_family == 'Debian'
+        - ansible_facts.distribution_major_version == '13'
+
+    - name: Install Docker apt key on Debian 13
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/debian/gpg
+        dest: /etc/apt/keyrings/docker-bookworm.asc
+        mode: "0644"
+      when:
+        - ansible_facts.os_family == 'Debian'
+        - ansible_facts.distribution_major_version == '13'
+
+    - name: Configure Docker bookworm apt list on Debian 13
+      ansible.builtin.copy:
+        dest: /etc/apt/sources.list.d/docker-bookworm.list
+        mode: "0644"
+        content: |
+          deb [arch=amd64 signed-by=/etc/apt/keyrings/docker-bookworm.asc] https://download.docker.com/linux/debian bookworm stable
+      when:
+        - ansible_facts.os_family == 'Debian'
+        - ansible_facts.distribution_major_version == '13'
+
+    - name: Update apt cache for Docker bookworm repo on Debian 13
+      ansible.builtin.command: apt-get update
+      changed_when: false
+      when:
+        - ansible_facts.os_family == 'Debian'
+        - ansible_facts.distribution_major_version == '13'
+  roles:
+    - geerlingguy.docker
+    - disable_systemd_resolved
+    - tailscale_host
 
 # - name: Configure Docker swarm
 #   hosts: docker_swarm
