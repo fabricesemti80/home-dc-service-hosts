@@ -28,14 +28,14 @@ tasks:
     preconditions:
       - which tofu
 
-  ansible:check:
-    desc: Check Ansible playbook syntax
-    cmd: sh -lc 'set -a; test ! -f .env || . ./.env; set +a; cd ansible && ansible-playbook --syntax-check site.yml'
+  ansible:plan:
+    desc: Plan Ansible changes
+    cmd: sh -lc 'set -a; if [ -f .env ]; then . ./.env; elif [ -f "$HOME/Documents/repositories/infrastructure/home-dc-service-hosts/.env" ]; then . "$HOME/Documents/repositories/infrastructure/home-dc-service-hosts/.env"; fi; set +a; cd ansible && ansible-playbook --check --diff site.yml'
     preconditions:
       - which ansible-playbook
 
   ansible:apply:
     desc: Configure service hosts with Ansible
-    cmd: sh -lc 'set -a; test ! -f .env || . ./.env; set +a; cd ansible && ansible-playbook site.yml'
+    cmd: sh -lc 'set -a; if [ -f .env ]; then . ./.env; elif [ -f "$HOME/Documents/repositories/infrastructure/home-dc-service-hosts/.env" ]; then . "$HOME/Documents/repositories/infrastructure/home-dc-service-hosts/.env"; fi; set +a; cd ansible && ansible-playbook site.yml'
     preconditions:
       - which ansible-playbook

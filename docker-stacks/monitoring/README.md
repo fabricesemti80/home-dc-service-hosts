@@ -2,7 +2,7 @@
 
 ## Pulse
 
-Pulse is pinned to the Swarm manager `docker-svc-1` and stores data on that host:
+Pulse is pinned to the Swarm manager `sentinel-1` and stores data on that host:
 
 ```text
 /srv/docker/pulse/data

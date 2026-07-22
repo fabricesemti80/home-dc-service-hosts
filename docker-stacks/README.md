@@ -9,11 +9,11 @@ in the repo root `.env` and are listed in `.env.example`.
 
 | Area | Services | Endpoint |
 |---|---|---|
-| `apps/docker-compose.yml` | Beszel, Uptime Kuma, Whoami, Beszel agent | Swarm; apps pinned to `docker-svc-1`, agent global |
-| `dashboard/docker-compose.yml` | Homepage | Swarm; pinned to `docker-svc-1` |
-| `gitops/docker-compose.yml` | Kestra | Swarm; pinned to `docker-svc-1` |
+| `apps/docker-compose.yml` | Beszel, Uptime Kuma, Whoami, Beszel agent | Swarm; apps pinned to `sentinel-1`, agent global |
+| `dashboard/docker-compose.yml` | Homepage | Swarm; pinned to `sentinel-1` |
+| `gitops/docker-compose.yml` | Kestra | Swarm; pinned to `sentinel-1` |
 | `networking/docker-compose.yml` | Docktail, Technitium primary/secondary | Swarm; Docktail global, DNS pinned per host |
-| `monitoring/docker-compose.yml` | Pulse | Swarm manager, constrained to `docker-svc-1` |
+| `monitoring/docker-compose.yml` | Pulse | Swarm manager, constrained to `sentinel-1` |
 
 Services attach to `homelab_proxy`; Swarm stacks require that network to be a swarm-scope overlay network before deployment.
 

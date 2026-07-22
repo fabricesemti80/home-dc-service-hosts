@@ -14,7 +14,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == docker-svc-1
+          - node.hostname == sentinel-1
       restart_policy:
         condition: any
 
@@ -81,7 +81,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == docker-svc-1
+          - node.hostname == sentinel-1
       restart_policy:
         condition: any
     labels:
@@ -115,7 +115,7 @@ services:
         condition: on-failure
       placement:
         constraints:
-          - node.hostname == docker-svc-1
+          - node.hostname == sentinel-1
 
 networks:
   homelab_proxy_swarm:

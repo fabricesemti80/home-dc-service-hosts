@@ -24,7 +24,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == docker-svc-1
+          - node.hostname == sentinel-1
       restart_policy:
         condition: any
     labels:

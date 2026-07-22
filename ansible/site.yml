@@ -5,29 +5,29 @@
   roles:
     - debian_base
 
-- name: Configure Proxmox Backup Server guests
-  hosts: proxmox_backup_servers
-  become: true
-  roles:
-    - proxmox_backup_server
-    - proxmox_backup_datastore
+# - name: Configure Proxmox Backup Server guests
+#   hosts: proxmox_backup_servers
+#   become: true
+#   roles:
+#     - proxmox_backup_server
+#     - proxmox_backup_datastore
 
-- name: Configure Docker standalone hosts
-  hosts: docker_standalone_hosts
-  become: true
-  roles:
-    - geerlingguy.docker
-    - tailscale_host
-    - disable_systemd_resolved
+# - name: Configure Docker standalone hosts
+#   hosts: docker_standalone_hosts
+#   become: true
+#   roles:
+#     - geerlingguy.docker
+#     - tailscale_host
+#     - disable_systemd_resolved
 
-- name: Configure Docker swarm
-  hosts: docker_swarm
-  become: true
-  roles:
-    - docker_swarm
+# - name: Configure Docker swarm
+#   hosts: docker_swarm
+#   become: true
+#   roles:
+#     - docker_swarm
 
-- name: Bootstrap Portainer
-  hosts: docker_standalone_hosts
-  become: true
-  roles:
-    - portainer_bootstrap
+# - name: Bootstrap Portainer
+#   hosts: docker_standalone_hosts
+#   become: true
+#   roles:
+#     - portainer_bootstrap

@@ -35,8 +35,41 @@
     dest: /etc/hostname
     content: "{{ inventory_hostname }}\n"
     mode: "0644"
-  when: ansible_facts['hostname'] != inventory_hostname
   notify: Reboot host
+
+- name: Configure static network address
+  ansible.builtin.copy:
+    dest: /etc/systemd/network/10-ansible-static.network
+    mode: "0644"
+    content: |
+      [Match]
+      Name={{ debian_base_static_ipv4_interface | default(ansible_facts.default_ipv4.interface) }}
+
+      [Network]
+      Address={{ debian_base_static_ipv4_address }}
+      Gateway={{ debian_base_static_ipv4_gateway }}
+  when: debian_base_static_ipv4_address is defined
+  notify: Reboot host
+
+- name: Enable systemd-networkd for static network
+  ansible.builtin.systemd:
+    name: systemd-networkd
+    enabled: true
+  when: debian_base_static_ipv4_address is defined
+
+- name: Disable ifupdown networking for static network
+  ansible.builtin.systemd:
+    name: networking
+    enabled: false
+  when: debian_base_static_ipv4_address is defined
+  failed_when: false
+
+- name: Disable NetworkManager for static network
+  ansible.builtin.systemd:
+    name: NetworkManager
+    enabled: false
+  when: debian_base_static_ipv4_address is defined
+  failed_when: false
 
 - name: Set root password from environment
   ansible.builtin.user:
