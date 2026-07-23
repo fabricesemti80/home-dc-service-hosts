@@ -212,7 +212,7 @@ services:
       docktail.service.name: technitium-companion
       docktail.service.port: "3443"
       docktail.service.service-port: "443"
-      docktail.service.protocol: https
+      docktail.service.protocol: https+insecure
       homepage.group: Infrastructure
       homepage.name: Technitium Companion
       homepage.icon: mdi-dns
