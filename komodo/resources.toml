@@ -39,6 +39,7 @@ branch = "main"
 file_paths = ["docker-stacks/monitoring/docker-compose.yml"]
 environment = """
 PULSE_HOSTNAME = [[PULSE_HOSTNAME]]
+PULSE_AGENT_URL = [[PULSE_AGENT_URL]]
 """
 
 [[stack]]

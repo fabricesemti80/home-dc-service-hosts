@@ -35,6 +35,7 @@ services:
     environment:
       TZ: Europe/London
       NODE_NAME: pulse-server
+      PULSE_AGENT_URL: ${PULSE_AGENT_URL}
     networks:
       - homelab_proxy_swarm
     ports:

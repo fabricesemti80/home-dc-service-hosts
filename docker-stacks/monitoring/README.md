@@ -30,6 +30,9 @@ Use the LAN endpoint for host-side agent installs:
 http://10.0.40.55:17655
 ```
 
+The stack passes this as `PULSE_AGENT_URL`, managed by Ansible from the
+monitoring host's `ansible_host`.
+
 The Tailscale service name `pulse.koala-dominant.ts.net` is for browser access
 from tailnet clients and may not resolve on the service hosts.
 
