@@ -40,6 +40,15 @@
     state: restarted
   when: containerd_config.changed | default(false)
 
+- name: Ensure Pulse data directory exists on monitoring host
+  ansible.builtin.file:
+    path: "{{ pulse_data_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  when: monitoring_stack_host | default(false)
+
 - name: Check local swarm state
   ansible.builtin.command: docker info --format '{{ "{{.Swarm.LocalNodeState}}" }} {{ "{{.Swarm.ControlAvailable}}" }}'
   register: docker_swarm_state

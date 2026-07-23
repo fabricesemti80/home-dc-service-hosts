@@ -13,7 +13,7 @@ in the repo root `.env` and are listed in `.env.example`.
 | `dashboard/docker-compose.yml` | Homepage | Swarm; pinned to `sentinel-1` |
 | `gitops/docker-compose.yml` | Kestra | Swarm; pinned to `sentinel-1` |
 | `networking/docker-compose.yml` | Docktail, Technitium primary/secondary | Swarm; Docktail global, DNS pinned per host |
-| `monitoring/docker-compose.yml` | Pulse | Swarm manager, constrained to `sentinel-1` |
+| `monitoring/docker-compose.yml` | Pulse | Swarm, constrained by `PULSE_HOSTNAME` |
 
 Services attach to `homelab_proxy`; Swarm stacks require that network to be a swarm-scope overlay network before deployment.
 

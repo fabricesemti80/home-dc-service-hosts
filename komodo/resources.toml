@@ -27,6 +27,20 @@ TECHNITIUM_NODE1_TOKEN = [[TECHNITIUM_NODE1_TOKEN]]
 TECHNITIUM_NODE2_TOKEN = [[TECHNITIUM_NODE2_TOKEN]]
 """
 
+[[stack]]
+name = "homelab-monitoring"
+tags = ["homelab", "monitoring"]
+deploy = true
+
+[stack.config]
+swarm = "home-swarm"
+repo = "fabricesemti80/home-dc-service-hosts"
+branch = "main"
+file_paths = ["docker-stacks/monitoring/docker-compose.yml"]
+environment = """
+PULSE_HOSTNAME = [[PULSE_HOSTNAME]]
+"""
+
 [[resource_sync]]
 name = "home-dc-service-hosts"
 tags = ["homelab"]

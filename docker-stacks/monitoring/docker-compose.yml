@@ -16,7 +16,7 @@ services:
     deploy:
       placement:
         constraints:
-          - node.hostname == sentinel-1
+          - node.hostname == ${PULSE_HOSTNAME}
       restart_policy:
         condition: any
     labels:
