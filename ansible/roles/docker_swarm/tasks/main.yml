@@ -40,6 +40,13 @@
     state: restarted
   when: containerd_config.changed | default(false)
 
+- name: Ensure Docker systemd override directory exists
+  ansible.builtin.file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+    mode: "0755"
+  when: docker_daemon_options is defined
+
 - name: Ensure Docker loads daemon config file
   ansible.builtin.copy:
     dest: /etc/systemd/system/docker.service.d/10-config-file.conf
