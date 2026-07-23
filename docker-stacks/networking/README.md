@@ -27,18 +27,19 @@ TECHNITIUM_BACKGROUND_TOKEN was rejected by node "node0": invalid token.
 
 1. Open a Technitium DNS web console, for example `https://technitium-0.koala-dominant.ts.net`.
 2. Prefer a dedicated non-admin user if the permissions you need can be limited.
-3. Open the user menu in the top right, or `Administration -> API Tokens` depending on the Technitium version.
-4. Create an API token.
-5. Enter the user's password.
-6. Name it `technitium-companion-background`.
-7. Copy the token immediately; Technitium shows it once.
-8. Put it in the real repo `.env`:
+3. Add that user to a group with the DNS permissions Companion needs.
+4. Go to `Administration -> Sessions`.
+5. Click `Create token`.
+6. Select the user.
+7. Name it `technitium-companion-background`.
+8. Copy the token immediately; Technitium shows it once.
+9. Put it in the real repo `.env`:
 
 ```dotenv
 TECHNITIUM_BACKGROUND_TOKEN="paste-token-here"
 ```
 
-9. Re-sync or redeploy `homelab-networking` in Komodo so the updated environment reaches the container.
+10. Re-sync or redeploy `homelab-networking` in Komodo so the updated environment reaches the container.
 
 If one token is not valid for every DNS node, switch this stack to per-node tokens instead:
 
