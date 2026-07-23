@@ -186,6 +186,11 @@ services:
     image: ghcr.io/fail-safe/technitium-dns-companion:latest
     networks:
       - homelab_proxy_swarm
+    ports:
+      - target: 3000
+        published: 3000
+        protocol: tcp
+        mode: host
     environment:
       TZ: Europe/London
       TECHNITIUM_NODES: node0,node1,node2
