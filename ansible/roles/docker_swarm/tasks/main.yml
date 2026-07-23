@@ -40,6 +40,28 @@
     state: restarted
   when: containerd_config.changed | default(false)
 
+- name: Ensure Docker loads daemon config file
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/docker.service.d/10-config-file.conf
+    mode: "0644"
+    content: |
+      [Service]
+      ExecStart=
+      ExecStart=/usr/bin/dockerd --config-file=/etc/docker/daemon.json -H fd:// --containerd=/run/containerd/containerd.sock
+  register: docker_config_file_override
+  when: docker_daemon_options is defined
+
+- name: Reload systemd for Docker config override
+  ansible.builtin.systemd:
+    daemon_reload: true
+  when: docker_config_file_override.changed | default(false)
+
+- name: Restart Docker for config override
+  ansible.builtin.service:
+    name: docker
+    state: restarted
+  when: docker_config_file_override.changed | default(false)
+
 - name: Ensure Pulse data directory exists on monitoring host
   ansible.builtin.file:
     path: "{{ pulse_data_dir }}"
