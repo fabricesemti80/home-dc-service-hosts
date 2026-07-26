@@ -31,8 +31,10 @@ resource "tailscale_acl" "this" {
     ]
 
     tagOwners = {
-      "tag:container" = ["tag:server"]
-      "tag:server"    = ["autogroup:admin"]
+      "tag:container"    = ["tag:server"]
+      "tag:k8s"          = ["tag:k8s-operator"]
+      "tag:k8s-operator" = ["autogroup:admin"]
+      "tag:server"       = ["autogroup:admin"]
     }
   })
 }
